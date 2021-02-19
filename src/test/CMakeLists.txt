@@ -26,12 +26,12 @@ target_link_libraries(mesh_marker_test ${catkin_LIBRARIES})
 add_dependencies(tests mesh_marker_test)
 
 # This is a GTest which tests the different types of primitive display properties.
-catkin_add_gtest(property_test
-  property_test.cpp
-  mock_property_change_receiver.cpp
-  ${MOC_MOCK_PROPERTY_CHANGE_RECEIVER}
-)
-target_link_libraries(property_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES})
+#catkin_add_gtest(property_test
+#  property_test.cpp
+#  mock_property_change_receiver.cpp
+#  ${MOC_MOCK_PROPERTY_CHANGE_RECEIVER}
+#)
+#target_link_libraries(property_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES})
 
 # TODO(wjwwood): Fix this test, it used to use a set of Mock classes, but
 #                has since undergone a lot of changes and it no longer works.
@@ -49,10 +49,10 @@ target_link_libraries(property_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES})
 # target_link_libraries(display_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES})
 
 # This is a GTest which tests the uniform_string_stream.
-catkin_add_gtest(uniform_string_stream_test
-  uniform_string_stream_test.cpp
-  ../rviz/uniform_string_stream.cpp
-)
+#catkin_add_gtest(uniform_string_stream_test
+#  uniform_string_stream_test.cpp
+#  ../rviz/uniform_string_stream.cpp
+#)
 
 # This is an example node which serves an rviz logo as an interactive marker.
 add_executable(rviz_logo_marker EXCLUDE_FROM_ALL rviz_logo_marker.cpp)
@@ -135,14 +135,14 @@ target_link_libraries(color_editor_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES}
 add_dependencies(tests color_editor_test)
 
 # This is a modified version of the property test.
-catkin_add_gtest(property_with_ros_spinner_test
-  property_test.cpp
-  ros_spinner.cpp
-  mock_property_change_receiver.cpp
-  ${MOC_MOCK_PROPERTY_CHANGE_RECEIVER}
-)
-target_link_libraries(property_with_ros_spinner_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES})
-add_dependencies(tests property_with_ros_spinner_test)
+#catkin_add_gtest(property_with_ros_spinner_test
+#  property_test.cpp
+#  ros_spinner.cpp
+#  mock_property_change_receiver.cpp
+#  ${MOC_MOCK_PROPERTY_CHANGE_RECEIVER}
+#)
+#target_link_libraries(property_with_ros_spinner_test rviz ${catkin_LIBRARIES} ${QT_LIBRARIES})
+#add_dependencies(tests property_with_ros_spinner_test)
 
 # This is an executable that uses the line_edit_with_button property interface.
 add_executable(line_edit_with_button_test line_edit_with_button_test.cpp)
@@ -161,8 +161,8 @@ target_link_libraries(connect_test ${QT_LIBRARIES})
 add_dependencies(tests connect_test)
 
 # This is a GTest which tests the display configuration.
-catkin_add_gtest(config_test config_test.cpp ../rviz/uniform_string_stream.cpp ../rviz/config.cpp)
-target_link_libraries(config_test ${QT_LIBRARIES})
+#catkin_add_gtest(config_test config_test.cpp ../rviz/uniform_string_stream.cpp ../rviz/config.cpp)
+#target_link_libraries(config_test ${QT_LIBRARIES})
 
 # This is an acceptance test executable which renders points.
 add_executable(render_points_test
