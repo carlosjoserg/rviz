@@ -51,14 +51,11 @@ else()
   set(ASSIMP_INCLUDE_DIRS)
 endif()
 
-pkg_check_modules(OGRE_OV OGRE OGRE-Overlay)
-
-# Old versions of OGRE (pre 1.9) included OGRE-Overlay in the main package
-# (i.e. there was no OGRE-Overlay component).  So if the above
-# pkg_check_modules() failed, try looking for just OGRE.
-if(NOT OGRE_OV_FOUND)
-  pkg_check_modules(OGRE_OV REQUIRED OGRE)
-endif(NOT OGRE_OV_FOUND)
+set(CMAKE_MODULE_PATH "/usr/share/OGRE/cmake/modules;${CMAKE_MODULE_PATH}")
+find_package(OGRE REQUIRED
+  COMPONENTS
+  Overlay
+)
 
 ## Find OGRE Plugin path (not necessarily platform-independent, I guess)
 if(NOT DEFINED OGRE_PLUGIN_PATH)
@@ -69,31 +66,6 @@ if(NOT DEFINED OGRE_PLUGIN_PATH)
     )
 endif(NOT DEFINED OGRE_PLUGIN_PATH)
 message(STATUS OGRE_PLUGIN_PATH=${OGRE_PLUGIN_PATH})
-
-# find absolute path of ogre libraries.
-# This is stored in the cache to save time on cmake re-run.
-# Using absolute paths is necessary if pkg-config finds Ogre in a different
-# location than the default.  This can happen when Ogre is built from source,
-# or when 2 versions of Ogre are installed.  Using absolute paths ensures that
-# components that link against Ogre (rviz and any packages depending on rviz)
-# all find the same Ogre shared library.
-if(NOT DEFINED OGRE_OV_LIBRARIES_ABS)
-  unset(OGRE_OV_LIBRARIES_ABS_TMP)
-  foreach(_lib ${OGRE_OV_LIBRARIES})
-    set(OGRE_OV_LIB_TAG "OGRE_OV_RVIZ_LIB_${_lib}")
-
-    find_library(${OGRE_OV_LIB_TAG}
-            NAMES ${_lib}
-            HINTS ${OGRE_OV_LIBRARY_DIRS}
-            PATHS ${OGRE_OV_LIBRARY_DIRS}
-    )
-
-    set(OGRE_OV_LIBRARIES_ABS_TMP ${OGRE_OV_LIBRARIES_ABS_TMP} ${${OGRE_OV_LIB_TAG}})
-  endforeach(_lib)
-
-  set(OGRE_OV_LIBRARIES_ABS ${OGRE_OV_LIBRARIES_ABS_TMP}
-        CACHE FILEPATH "Pathname of library ${_lib}")
-endif(NOT DEFINED OGRE_OV_LIBRARIES_ABS)
 
 if(APPLE)
   FIND_LIBRARY(Cocoa_LIBRARIES Cocoa)
@@ -166,10 +138,6 @@ find_package(TinyXML2 REQUIRED)
 
 catkin_python_setup()
 
-if(NOT OGRE_OV_LIBRARIES_ABS)
-  set(OGRE_OV_LIBRARIES_ABS ${OGRE_OV_LIBRARIES})
-endif()
-
 # Set the Qt version for use in the extras file.
 set(rviz_QT_VERSION ${QTVERSION})
 
@@ -200,11 +168,13 @@ catkin_package(
     src
     ${EXPORT_HEADER_DIR}
     ${EIGEN3_INCLUDE_DIRS}
-    ${OGRE_OV_INCLUDE_DIRS}
+    ${OGRE_INCLUDE_DIRS}
+    ${OGRE_Overlay_INCLUDE_DIRS}
     ${OPENGL_INCLUDE_DIR}
   LIBRARIES
     rviz
-    ${OGRE_OV_LIBRARIES_ABS}
+    ${OGRE_LIBRARIES}
+    ${OGRE_Overlay_LIBRARIES}
     ${rviz_ADDITIONAL_LIBRARIES}
     ${OPENGL_LIBRARIES}
   CATKIN_DEPENDS
@@ -230,7 +200,8 @@ catkin_package(
 
 include_directories(SYSTEM
   ${EIGEN3_INCLUDE_DIRS}
-  ${OGRE_OV_INCLUDE_DIRS}
+  ${OGRE_INCLUDE_DIRS}
+  ${OGRE_Overlay_INCLUDE_DIRS}
   ${OPENGL_INCLUDE_DIR}
   ${PYTHON_INCLUDE_PATH}
   ${TinyXML2_INCLUDE_DIRS}
